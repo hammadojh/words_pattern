@@ -5,18 +5,41 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
     <title>Random Word Table</title>
     <style>
+
+        body{
+         text-align: center;
+         /* align items in middle of screen */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        }
+
         table {
-            border-collapse: collapse;
+            display: flex;
+            justify-content: center;
+            margin: 16px 0;
         }
 
         td {
-            border: 1px solid black;
+            border: 1px solid #eee;
             padding: 10px;
+            border-radius: 4px;
         }
+
+        #table-body td {
+            width: 44px;
+            height: 44px;
+        }
+
     </style>
 </head>
 
 <body>
+    <!-- timer -->
+    <div id="timer" onclick="startTimer(120)">Click to start countdown</div>
+
     <!-- game table -->
     <table>
         <tbody id="table-body">
@@ -190,6 +213,41 @@
                 table.style.display = 'none'; // Hide the table
             }
         }
+
+        //timer
+        let countdown; // Store the countdown interval
+        const countdownText = document.getElementById('timer');
+
+        function startCountdown() {
+        let seconds = 120; // Initial countdown time (in seconds)
+
+        countdown = setInterval(function() {
+            countdownText.textContent = `${seconds} seconds`;
+
+            if (seconds <= 0) {
+            clearInterval(countdown);
+            countdownText.textContent = 'Countdown completed! Click to restart';
+            countdownText.style.cursor = 'pointer';
+            }
+
+            seconds--;
+        }, 1000);
+        }
+
+        countdownText.addEventListener('click', function() {
+        if (countdown) {
+            // If countdown is already running, restart it
+            clearInterval(countdown);
+            countdown = null;
+            countdownText.textContent = 'Click to start countdown';
+        } else {
+            // If countdown is not running, start it
+            countdownText.style.cursor = 'auto'; // Disable click while countdown is active
+            startCountdown();
+        }
+        });
+
+
 
     </script>
 </body>
