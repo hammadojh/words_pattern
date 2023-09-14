@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
+    <title>Random Word Table</title>
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+
+        td {
+            border: 1px solid black;
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- game table -->
+    <table>
+        <tbody id="table-body">
+        </tbody>
+    </table>
+
+    <!-- show/hide button -->
+    <button id="shbutton" onclick="shhide()">show/hide pattern</button>
+
+    <!-- pattern -->
+    <table>
+        <tbody id="pattern-table" style="display:none;">
+        </tbody>
+    </table>
+
+    <script>
+
+        // matrix
+        const randomMatrix = generateRandomMatrix();
+
+        // Array of random words
+        const randomWords = [
+            "سيارة",
+            "منزل",
+            "جوال",
+            "مدرسة",
+            "شجرة",
+            "كتاب",
+            "ماء",
+            "شمس",
+            "عائلة",
+            "جمال",
+            "لغة",
+            "مدينة",
+            "طائرة",
+            "سماء",
+            "صديق",
+            "سعادة",
+            "صحة",
+            "قهوة",
+            "طعام",
+            "سفر",
+            "زهرة",
+            "بحر",
+            "جبل",
+            "صخرة",
+            "قمر",
+            "فراشة",
+            "ساعة",
+            "مفتاح",
+            "عمل",
+            "موسيقى",
+            "فن",
+            "رياضة",
+            "علم",
+            "شكراً",
+            "مرحباً",
+            "مساء الخير",
+            "صباح الخير",
+            "جميل",
+            "حب",
+            "سلام",
+            "أمل",
+            "حرية",
+            "عدالة",
+            "سكن",
+            "قرار",
+            "نجاح",
+            "حظ",
+            "سفرة",
+            "قرية",
+            "قميص",
+        ];
+
+        // Function to generate a random word from the array
+        function getRandomWord() {
+            const randomIndex = Math.floor(Math.random() * randomWords.length);
+            return randomWords[randomIndex];
+        }
+
+        // Create the table and populate it with random words
+        const tableBody = document.getElementById('table-body');
+        for (let row = 0; row < 5; row++) {
+            const newRow = document.createElement('tr');
+            for (let col = 0; col < 5; col++) {
+                const newCell = document.createElement('td');
+                newCell.textContent = getRandomWord();
+                newCell.addEventListener('click', () => changeColor(newCell));
+                newRow.appendChild(newCell);
+            }
+            tableBody.appendChild(newRow);
+        }
+
+        function generateRandomMatrix() {
+            const matrix = Array.from({ length: 5 }, () => Array(5).fill(0));
+
+            // Place eight 0s, eight 1s, eight 2s, and one 3 randomly
+            const values = [0, 1, 2, 3];
+            const counts = [8, 8, 8, 1];
+
+            for (const value of values) {
+                for (let i = 0; i < counts[value]; i++) {
+                    let row, col;
+
+                    do {
+                        row = Math.floor(Math.random() * 5);
+                        col = Math.floor(Math.random() * 5);
+                    } while (matrix[row][col] !== 0);
+
+                    matrix[row][col] = value;
+                }
+            }
+
+            return matrix;
+        }
+
+        // Generate and print the random matrix
+        for (const row of randomMatrix) {
+            console.log(row.join(' '));
+        }
+
+        function getColor(value) {
+            switch (value) {
+                case 0:
+                    return 'red';
+                case 1:
+                    return 'blue';
+                case 2:
+                    return 'yellow';
+                case 3:
+                    return 'black';
+                default:
+                    return 'white';
+            }
+        }
+
+        function changeColor(cell) {
+
+            // Get the cell's parent row (tr)
+            const row = cell.parentElement;
+            const rowIndex = row.rowIndex;
+            const cellIndex = cell.cellIndex;
+
+            //get value from matrix
+            value = randomMatrix[rowIndex][cellIndex]
+
+            //change color based on value
+            cell.style.backgroundColor = getColor(value);
+        }
+
+        //generate pattern table
+        const table = document.getElementById('pattern-table');
+
+        for (let i = 0; i < 5; i++) {
+            const row = document.createElement('tr');
+            for (let j = 0; j < 5; j++) {
+                const cell = document.createElement('td');
+                const value = randomMatrix[i][j];
+                cell.style.backgroundColor = getColor(value);
+                row.appendChild(cell);
+            }
+            table.appendChild(row);
+        }
+
+        //hide or show table
+        function shhide() {
+            // Toggle the visibility of the table
+            if (table.style.display === 'none' || table.style.display === '') {
+                table.style.display = 'table'; // Show the table
+            } else {
+                table.style.display = 'none'; // Hide the table
+            }
+        }
+
+    </script>
+</body>
+
+</html>
