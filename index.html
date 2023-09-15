@@ -5,15 +5,28 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
     <title>Random Word Table</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@100;200;300;400;500;600;700&display=swap');
 
-        body{
-         text-align: center;
-         /* align items in middle of screen */
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
+
+        * {
+            font-family: 'IBM Plex Sans Arabic', sans-serif;
+        }
+
+
+        body {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+
+            /* darken the bg image */
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0)),
+                url("bg.jpg");
+            /* background: rgba(0, 0, 0, 0.5);
+            background: url("bg.jpg"); */
+            background-size: cover;
         }
 
         table {
@@ -26,93 +39,254 @@
             border: 1px solid #eee;
             padding: 10px;
             border-radius: 4px;
+            font-weight: bold;
+            background-color: white;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        td:hover {
+            background-color: #ccc;
+            cursor: pointer;
         }
 
         #table-body td {
-            width: 44px;
-            height: 44px;
+            width: 64px;
+            height: 32px;
         }
 
+        #timer {
+            color: white;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 4px 12px;
+            width: 100px;
+            border-radius: 500px;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        #timer:hover {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        #center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #center>div {
+            margin: 24px;
+        }
+
+        #cards {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card {
+            width: 64px;
+            height: 32px;
+            /* border: 1px solid #eee; */
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            color: white;
+            font-size: smaller;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card:nth-child(1) {
+            background-color: #1c70dd;
+        }
+
+        .card:nth-child(2) {
+            background-color: #e21d4f;
+        }
+
+        .card:nth-child(3) {
+            background-color: #9fff5a;
+            color: black;
+        }
+
+        .card:nth-child(4) {
+            background-color: black;
+        }
+
+        /* change style of h1 to gradient with stroke and rotate it 5 degrees */
+        h1 {
+            font-size: 48px;
+            color: white;
+            stroke: 1px #333;
+            transform: rotate(-5deg);
+            margin: -12px 0;
+            /* chrome shadow */
+            text-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        #shbutton {
+            color: white;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 4px 12px;
+            width: 100px;
+            border-radius: 500px;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+            border: none;
+        }
     </style>
 </head>
 
 <body>
-    <!-- timer -->
-    <div id="timer" onclick="startTimer(120)">Click to start countdown</div>
+
+    <h1>
+        لعبة البطاقات
+    </h1>
 
     <!-- game table -->
-    <table>
-        <tbody id="table-body">
-        </tbody>
-    </table>
+    <div id="center">
+        <!-- pattern -->
+        <div>
+            <!-- show/hide button -->
+            <button id="shbutton" ondblclick="shhide()">الجدول</button>
 
-    <!-- show/hide button -->
-    <button id="shbutton" onclick="shhide()">show/hide pattern</button>
+            <!-- pattern -->
+            <table>
+                <tbody id="pattern-table" style="display:none;">
+                </tbody>
+            </table>
+        </div>
+        <!-- board -->
+        <table>
+            <tbody id="table-body">
+            </tbody>
+        </table>
+        <!-- cards -->
+        <div id="cards">
+            <div id="blue_counter" class="card">ازرق</div>
+            <div id="red_counter" class="card">احمر</div>
+            <div id="yellow_counter" class="card">اخضر</div>
+            <div id="black_counter" class="card">اسود</div>
+        </div>
+    </div>
 
-    <!-- pattern -->
-    <table>
-        <tbody id="pattern-table" style="display:none;">
-        </tbody>
-    </table>
+    <!-- timer -->
+    <div id="timer" onclick="startTimer(60)">ابدأ المؤقت</div>
 
     <script>
 
         // matrix
         const randomMatrix = generateRandomMatrix();
 
+
         // Array of random words
+        // arabic-nouns.js
         const randomWords = [
+            "مدرسة",
+            "كتاب",
             "سيارة",
             "منزل",
-            "جوال",
-            "مدرسة",
             "شجرة",
-            "كتاب",
-            "ماء",
-            "شمس",
-            "عائلة",
-            "جمال",
-            "لغة",
-            "مدينة",
-            "طائرة",
-            "سماء",
-            "صديق",
-            "سعادة",
-            "صحة",
-            "قهوة",
+            "قلم",
             "طعام",
-            "سفر",
-            "زهرة",
+            "ماء",
+            "جدار",
+            "طائرة",
+            "حاسوب",
+            "هاتف",
+            "مدينة",
+            "باب",
+            "شمس",
+            "قمر",
+            "نجم",
+            "سماء",
+            "أرض",
             "بحر",
             "جبل",
-            "صخرة",
-            "قمر",
+            "نهر",
+            "صحراء",
+            "زهرة",
+            "حيوان",
+            "طائر",
+            "سمك",
+            "قطة",
+            "كلب",
             "فراشة",
-            "ساعة",
-            "مفتاح",
-            "عمل",
-            "موسيقى",
-            "فن",
-            "رياضة",
-            "علم",
-            "شكراً",
-            "مرحباً",
-            "مساء الخير",
-            "صباح الخير",
-            "جميل",
-            "حب",
-            "سلام",
-            "أمل",
-            "حرية",
-            "عدالة",
-            "سكن",
-            "قرار",
-            "نجاح",
-            "حظ",
-            "سفرة",
-            "قرية",
-            "قميص",
+            "حجر",
+            "مدير",
+            "طبيب",
+            "ممرضة",
+            "محامي",
+            "مهندس",
+            "معلم",
+            "طالب",
+            "طباخ",
+            "حلاق",
+            "بائع",
+            "شاعر",
+            "فنان",
+            "مغني",
+            "راقصة",
+            "ممثل",
+            "ممثلة",
+            "كاتب",
+            "عالم",
+            "مخترع",
+            "جندي",
+            "رئيس",
+            "ملك",
+            "ملكة",
+            "أمير",
+            "أميرة",
+            "شرطي",
+            "شرطية",
+            "قاضي",
+            "مذيع",
+            "صحفي",
+            "عامل",
+            "زبون",
+            "زبانية",
+            "زوج",
+            "زوجة",
+            "أب",
+            "أم",
+            "إبن",
+            "إبنة",
+            "جد",
+            "جدة",
+            "أخ",
+            "أخت",
+            "صديق",
+            "رفيق",
+            "عائلة",
+            "منفذ",
+            "سوق",
+            "محل",
+            "حانة",
+            "مستشفى",
+            "مسجد",
+            "كنيسة",
+            "معبد",
+            "مسرح",
+            "حديقة",
+            "مطار",
+            "محطة",
+            "ميناء",
+            "فندق",
+            "مطعم",
+            "مقهى",
+            "حمام",
+            "مدرج",
+            "حقل",
+            "سباحة",
+            "مكتب",
+            "مصنع",
+            "مستودع"
         ];
+
 
         // Function to generate a random word from the array
         function getRandomWord() {
@@ -122,11 +296,17 @@
 
         // Create the table and populate it with random words
         const tableBody = document.getElementById('table-body');
+        var unique_words = []
         for (let row = 0; row < 5; row++) {
             const newRow = document.createElement('tr');
             for (let col = 0; col < 5; col++) {
                 const newCell = document.createElement('td');
-                newCell.textContent = getRandomWord();
+                word = getRandomWord();
+                while (unique_words.includes(word)) {
+                    word = getRandomWord();
+                }
+                unique_words.push(word);
+                newCell.textContent = word;
                 newCell.addEventListener('click', () => changeColor(newCell));
                 newRow.appendChild(newCell);
             }
@@ -164,11 +344,11 @@
         function getColor(value) {
             switch (value) {
                 case 0:
-                    return 'red';
+                    return '#e21d4f';
                 case 1:
-                    return 'blue';
+                    return '#1c70dd';
                 case 2:
-                    return 'yellow';
+                    return '#9fff5a';
                 case 3:
                     return 'black';
                 default:
@@ -188,6 +368,11 @@
 
             //change color based on value
             cell.style.backgroundColor = getColor(value);
+            cell.style.color = getColor(value);
+
+            // reduce the html value based on color (red or blue or yellow or black)
+
+            
         }
 
         //generate pattern table
@@ -219,32 +404,32 @@
         const countdownText = document.getElementById('timer');
 
         function startCountdown() {
-        let seconds = 120; // Initial countdown time (in seconds)
+            let seconds = 60; // Initial countdown time (in seconds)
 
-        countdown = setInterval(function() {
-            countdownText.textContent = `${seconds} seconds`;
+            countdown = setInterval(function () {
+                countdownText.textContent = `${seconds} ثانية`;
 
-            if (seconds <= 0) {
-            clearInterval(countdown);
-            countdownText.textContent = 'Countdown completed! Click to restart';
-            countdownText.style.cursor = 'pointer';
+                if (seconds <= 0) {
+                    clearInterval(countdown);
+                    countdownText.textContent = 'اعادة الوقت';
+                    countdownText.style.cursor = 'pointer';
+                }
+
+                seconds--;
+            }, 1000);
+        }
+
+        countdownText.addEventListener('click', function () {
+            if (countdown) {
+                // If countdown is already running, restart it
+                clearInterval(countdown);
+                countdown = null;
+                countdownText.textContent = 'ابدأ الوقت';
+            } else {
+                // If countdown is not running, start it
+                countdownText.style.cursor = 'auto'; // Disable click while countdown is active
+                startCountdown();
             }
-
-            seconds--;
-        }, 1000);
-        }
-
-        countdownText.addEventListener('click', function() {
-        if (countdown) {
-            // If countdown is already running, restart it
-            clearInterval(countdown);
-            countdown = null;
-            countdownText.textContent = 'Click to start countdown';
-        } else {
-            // If countdown is not running, start it
-            countdownText.style.cursor = 'auto'; // Disable click while countdown is active
-            startCountdown();
-        }
         });
 
 

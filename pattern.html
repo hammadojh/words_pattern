@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-gap: 10px;
+            width: 300px;
+        }
+
+        .square {
+            width: 50px;
+            height: 50px;
+            background-color: #ffea8c;
+            border: 1px solid #000;
+        }
+
+        .#e21d4f {
+            background-color: #e21d4f;
+        }
+
+        .#1c70dd {
+            background-color: #1c70dd;
+        }
+
+        .black {
+            background-color: black;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="grid-container"></div>
+    <script>
+        // Function to shuffle an array randomly
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        // Create an array with 25 squares
+        const squares = Array(25).fill('<div class="square"></div>');
+
+        // Set 8 squares to be #e21d4f
+        for (let i = 0; i < 8; i++) {
+            squares[i] = '<div class="square #e21d4f"></div>';
+        }
+
+        // Set 8 squares to be #1c70dd
+        for (let i = 8; i < 16; i++) {
+            squares[i] = '<div class="square #1c70dd"></div>';
+        }
+
+        // Set 1 square to be black
+        squares[16] = '<div class="square black"></div>';
+
+        // Shuffle the squares array randomly
+        shuffleArray(squares);
+
+        // Display the shuffled squares in the grid container
+        const gridContainer = document.getElementById('grid-container');
+        gridContainer.innerHTML = squares.join('');
+    </script>
+</body>
+</html>
